@@ -1,20 +1,19 @@
 const  http  =  require('http');
 const  path  =  require('path');
-
+const  morgan  =  require('morgan');
 
 const  express  =  require('express');
+const  bodyParser  =  require('body-parser');
+const routes = require('./routes');
 const  app  =  express();
 
-const  bodyParser  =  require('body-parser');
-const  morgan  =  require('morgan');
-// const authRouter = require("./routes")
 
-// app.use('/auth', authRouter);
-
-app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended:  false }));
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 app.use(express.static(__dirname  +  '/public'));
+app.use('/', routes);
+
 
 
 // j'implémente la partie API
