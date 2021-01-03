@@ -1,94 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import axios from "axios";
 
 import "../styles/SignUp.css"
 
-function SignUp(){
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [name, setName] = useState('')
-    const [lastname, setLastname] = useState('')
-
-    const data = {
-        email,
-        password,
-        passwordConfirmation,
-        name,
-        lastname
-    }
-
-    const dataString= JSON.stringify(data)
+const SignUp= () => {
+    const [alert, setAlert] = useState(""); 
+    const [user, SetUser] = useState({
+        email:'',
+        password:'',
+        name:'',
+        lastname:'',
+    })
 
 
+const updateUser = (e) =>{
+    SetUser({ ...user, [e.target.name]: e.target.value})
+}
 
-    const updateEmailField = (e) =>{
-        setEmail(e.target.value)
-    }
-    const updatePasswordField = (e) =>{
-        setPassword(e.target.value)
-    }
-    const updatePasswordConfirmationField = (e) =>{
-        setPasswordConfirmation(e.target.value)
-    }
-    const updateNameField = (e) =>{
-        setName(e.target.value)
-    }
-    const updateLastnameField = (e) =>{
-        setLastname(e.target.value)
-    }
+const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post("/auth/signup", {
+          ... user})
+      .then((res) => res.data)
+      .then(
+        (res) => setAlert(res.flash),
+        (err) => setAlert(err.flash)
+      );
+}
 
-
-    const handleSubmit = (e) => {
-        console.log(data)
-        e.preventDefault();
-    }
 
    return (
         <div>
-            <h1> Your informations : <div className="data">{dataString} </div> </h1>
+            <h1> Your informations :  </h1>
             <form action="">
                 <input 
                     type="email" 
                     name="email" 
                     id="email"
-                    value={email}
-                    onChange={updateEmailField}
+                    // value={email}
+                    onChange={updateUser}
                     placeholder="Your email"
                 />
                 <input 
                     type="password" 
-                    name="paswword" 
+                    name="password" 
                     id="password"
-                    value={password}
-                    onChange={updatePasswordField}
+                    onChange={updateUser}
                     placeholder="Your password"
                 />
                 <input 
                     type="password-confirmation" 
                     name="paswword-confirmation" 
                     id="password-confirmation"
-                    value={passwordConfirmation}
-                    onChange={updatePasswordConfirmationField}
+                    onChange={updateUser}
                     placeholder="Your password"
                 />
                 <input 
                     type="name" 
                     name="name" 
                     id="name"
-                    value={name}
-                    onChange={updateNameField}
+                    onChange={updateUser}
                     placeholder="name"
                 />
                 <input 
                     type="lastname" 
                     name="lastname" 
                     id="lastname"
-                    value={lastname}
-                    onChange={updateLastnameField}
+                    onChange={updateUser}
                     placeholder="lastname"
                 />
                 <input type="submit" value="Soumettre" onClick={handleSubmit}/>
             </form>
+            <p> Message : {alert}</p>
             
                 
         </div>
